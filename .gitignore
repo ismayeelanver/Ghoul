@@ -1,5 +1,10 @@
-*/*.j
+# Ignore all .j files
 *.j
-*/*.class
+**/*.j
+
+# Ignore all .class files
 *.class
-codegen/jasmin-2.4
+**/*.class
+
+# Ignore the entire jasmin directory
+codegen/jasmin-2.4/
