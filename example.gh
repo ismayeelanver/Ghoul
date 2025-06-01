@@ -1,0 +1,7 @@
+const a = 10
+
+const b = a
+
+fun main(args str[]) {
+    print(a + 1)
+}
