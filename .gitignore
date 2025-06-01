@@ -1,2 +1,5 @@
 */*.j
 *.j
+*/*.class
+*.class
+codegen/jasmin-2.4
