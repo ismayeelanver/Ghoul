@@ -129,6 +129,12 @@ func (l *Lexer) Lex() []Token {
 				tokens = append(tokens, makeToken(FALSE, "false", l.pos))
 			case "return":
 				tokens = append(tokens, makeToken(RETURN, "return", l.pos))
+			case "while":
+				tokens = append(tokens, makeToken(WHILE, "while", l.pos))
+			case "do":
+				tokens = append(tokens, makeToken(DO, "do", l.pos))
+			case "for":
+				tokens = append(tokens, makeToken(FOR, "for", l.pos))
 			default:
 				tokens = append(tokens, makeToken(IDENTIFIER, value, l.pos))
 			}
@@ -244,7 +250,10 @@ func (l *Lexer) Lex() []Token {
 			l.idx++
 			l.pos.Column++
 			tokens = append(tokens, makeToken(RCURLY, string(ch), l.pos))
-
+		case ';':
+			l.idx++
+			l.pos.Column++
+			tokens = append(tokens, makeToken(SEMICOLON, string(ch), l.pos))
 		case ',':
 			l.idx++
 			l.pos.Column++
@@ -294,6 +303,34 @@ func (l *Lexer) Lex() []Token {
 					continue
 				}
 				tokens = append(tokens, makeToken(STRING, value, l.pos))
+			}
+
+		case '#':
+			{
+				for l.idx < uint(len(l.input)) {
+					ch := rune(l.input[l.idx])
+					if ch == '\n' {
+						break
+					}
+					l.idx++
+					l.pos.Column++
+				}
+
+				// If end of input reached after comment, break out cleanly
+				if l.idx >= uint(len(l.input)) {
+					break
+				}
+
+				// Handle newline after comment
+				if rune(l.input[l.idx]) == '\n' {
+					tokens = append(tokens, makeToken(NEWLINE, "\n", l.pos))
+					l.idx++
+					l.pos.Line++
+					l.pos.Column = 1
+				}
+
+				continue
+
 			}
 
 		case '"':

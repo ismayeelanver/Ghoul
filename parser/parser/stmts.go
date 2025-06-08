@@ -12,11 +12,6 @@ func parse_stmt(p *parser) ast.Stmt {
 		return stmt_fn(p)
 	}
 
-	if !p.inFunction {
-		panic(fmt.Sprintf("Expression statements are only allowed inside functions\n\tat %s:%d:%d\n",
-			p.Filename, p.currentToken().Pos.Line, p.currentToken().Pos.Column))
-	}
-
 	expression := parse_expr(p, defalt_bp)
 	if p.currentTokenKind() == lexer.EOF {
 		return ast.ExprStmt{
@@ -138,11 +133,6 @@ func parse_const_stmt(p *parser) ast.Stmt {
 }
 
 func parse_if_stmt(p *parser) ast.Stmt {
-	if !p.inFunction {
-		panic(fmt.Sprintf("If statements are only allowed inside functions\n\tat %s:%d:%d\n",
-			p.Filename, p.currentToken().Pos.Line, p.currentToken().Pos.Column))
-	}
-
 	p.advance()
 	condition := parse_expr(p, defalt_bp)
 
@@ -218,6 +208,68 @@ func parse_fun_stmt(p *parser) ast.Stmt {
 	}
 }
 
+func parse_while_stmt(p *parser) ast.Stmt {
+	p.advance()
+	condition := parse_expr(p, defalt_bp)
+	for p.currentTokenKind() == lexer.NEWLINE {
+		p.advance()
+	}
+
+	p.expect(lexer.LCURLY)
+	body := parse_inner_block(p)
+
+	return ast.WhileStmt{
+		Condition: condition,
+		Body:      body,
+	}
+}
+
+func parse_do_stmt(p *parser) ast.Stmt {
+	p.advance()
+	for p.currentTokenKind() == lexer.NEWLINE {
+		p.advance()
+	}
+
+	p.expect(lexer.LCURLY)
+	body := parse_inner_block(p)
+
+	p.expect(lexer.WHILE)
+	condition := parse_expr(p, defalt_bp)
+
+	return ast.DoStmt{
+		Condition: condition,
+		Body:      body,
+	}
+}
+
+func parse_for_stmt(p *parser) ast.Stmt {
+	p.advance()
+	p.expect(lexer.LPAREN)
+
+	stmt1 := parse_stmt(p)
+	p.expect(lexer.SEMICOLON)
+
+	condition := parse_expr(p, defalt_bp)
+	p.expect(lexer.SEMICOLON)
+
+	stmt2 := parse_stmt(p)
+	p.expect(lexer.RPAREN)
+
+	for p.currentTokenKind() == lexer.NEWLINE {
+		p.advance()
+	}
+
+	p.expect(lexer.LCURLY)
+	body := parse_inner_block(p)
+
+	return ast.ForStmt{
+		Stmt1:     stmt1,
+		Condition: condition,
+		Stmt2:     stmt2,
+		Body:      body,
+	}
+}
+
 func parse_return_stmt(p *parser) ast.Stmt {
 	if !p.inFunction {
 		panic(fmt.Sprintf("Return statements are only allowed inside functions\n\tat %s:%d:%d\n",
@@ -231,6 +283,6 @@ func parse_return_stmt(p *parser) ast.Stmt {
 	}
 	expression := parse_expr(p, defalt_bp)
 	return ast.ReturnStmt{
-		Expr: &expression,
+		Expr: expression,
 	}
 }

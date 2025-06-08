@@ -39,7 +39,30 @@ type FunStmt struct {
 func (f FunStmt) stmt() {}
 
 type ReturnStmt struct {
-	Expr *Expr
+	Expr Expr
 }
 
-func (r ReturnStmt) stmt() {}
+func (r ReturnStmt) stmt() {} // BRO IS AFKING
+
+type WhileStmt struct {
+	Condition Expr
+	Body      BlockStmt
+}
+
+func (w WhileStmt) stmt() {}
+
+type DoStmt struct {
+	Condition Expr
+	Body      BlockStmt
+}
+
+func (d DoStmt) stmt() {}
+
+type ForStmt struct {
+	Stmt1     Stmt
+	Condition Expr
+	Stmt2     Stmt
+	Body      BlockStmt
+}
+
+func (f ForStmt) stmt() {}

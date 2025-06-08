@@ -3,10 +3,11 @@ package ast
 import "ghoul/parser/lexer"
 
 type SymbolExpr struct {
-	Symbol string
+	Symbol 	string
 }
 
 func (s SymbolExpr) expr() {}
+
 
 type NumberExpr struct {
 	Int uint

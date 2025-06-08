@@ -1,0 +1,14 @@
+# welcome to ghoul
+# this is your first ghoul program
+# hello world as always
+# let's dive into it.
+
+fun main(args []str) {
+    # this is the main function where all the stuff for all ghoul programs runs,
+    # here we call the `println` function which is the function for printing a value and then adding a newline to the value we are showing.
+
+    println("Hello, world!")
+}
+
+# this is a comment btw :)
+# damn

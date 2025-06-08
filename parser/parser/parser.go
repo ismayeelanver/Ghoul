@@ -50,9 +50,9 @@ func createParser(tokens []lexer.Token, filename string) *parser {
 	createTokenLookups()
 	createTokenTypeLookups()
 	return &parser{
-		tokens:   tokens,
-		pos:      0,
-		Filename: filename,
+		tokens:     tokens,
+		pos:        0,
+		Filename:   filename,
 		inFunction: false,
 	}
 }

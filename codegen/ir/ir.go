@@ -33,7 +33,7 @@ type Function struct {
 	MaxLocals    int
 	MaxStack     int
 	ReturnType   gytes.JType
-	Instructions []gytes.BytesBlock
+	Instructions *gytes.BytesBlock
 }
 
 type Argument struct {
@@ -51,7 +51,7 @@ func MakeVariable(modifiers gytes.Access, value string, type_ gytes.JType, const
 	}
 }
 
-func MakeFunction(name string, modifiers gytes.Access, arguments []Argument, maxLocals int, maxStack int, returnType gytes.JType, instructions []gytes.BytesBlock) Function {
+func MakeFunction(name string, modifiers gytes.Access, arguments []Argument, maxLocals int, maxStack int, returnType gytes.JType, instructions *gytes.BytesBlock) Function {
 	return Function{
 		Name:         name,
 		Modifiers:    modifiers,
